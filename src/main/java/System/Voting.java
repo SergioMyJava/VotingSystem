@@ -10,20 +10,22 @@ public class Voting {
     private String title;
 
 
-    Voting(String title){
+    public Voting(String title,VotingSystem votingSystem){
+        this.votingSystem = votingSystem;
         this.title = title;
     }
+
     public String getTitle(){
         return title;
     }
 
     public Candidate addCandidate(String NameCandidate) throws SQLException {
-        String query = "SELECT candidate FROM election.candidatetest WHERE candidate = " + "'" + NameCandidate + "'";
+        String query = "SELECT NameCandidate FROM election.candidate WHERE NameCandidate = " + "'" + NameCandidate + "'";
 
         if (BDateMySql.query(query).next()) {
             System.out.println("Уже есть такой");
         } else {
-            BDateMySql.update("INSERT INTO election.candidatetest (candidate,voices) VALUES ('" + NameCandidate + "' ,'"+ 0 +"')");
+            BDateMySql.update("INSERT INTO election.candidate (NameCandidate,Voices) VALUES ('" + NameCandidate + "' ,'"+ 0 +"')");
             Candidate candidate = new Candidate(NameCandidate);
             this.candidate = candidate;
         }
@@ -31,22 +33,23 @@ public class Voting {
     }
 
     public void getListCandidate() throws SQLException {
-        String guery = "SELECT * FROM election.voterstest";
+        String guery = "SELECT * FROM election.voters";
 
         while (BDateMySql.query(guery).next()) {
-            int id = BDateMySql.query(guery).getInt("id_candidateTest");
-            String n = BDateMySql.query(guery).getString("candidate");
+            int id = BDateMySql.query(guery).getInt("id");
+            String NameCandidate = BDateMySql.query(guery).getString("NameCandidate");
 
-            System.out.println(id + ". " + n);
+            System.out.println(id + ". " + NameCandidate);
         }
     }
+
     public void beginVoid(String Login,String Password) throws SQLException {
 
         if (votingSystem.findUser(Login, Password)) {
             getListCandidate();
             Scanner in = new Scanner(System.in);
             int choose = Integer.parseInt(in.nextLine());
-            String guery ="update election.candidatetest set voices = voices+1 where id_candidateTest = '" + choose + "' ";
+            String guery ="update election.candidate set Voices = Voices+1 where id = '" + choose + "' ";
             BDateMySql.update(guery);
         }
     }

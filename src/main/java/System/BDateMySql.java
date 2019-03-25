@@ -3,7 +3,13 @@ import java.sql.*;
 
 public class BDateMySql {
     private static Connection connection;
-    public static final String url = "jdbc:mysql://localhost:3306/MySql?useSSL=false";
+    public static final String url = "jdbc:mysql://localhost:3306/election"+
+            "?verifyServerCertificate=false"+
+            "&useSSL=false"+
+            "&requireSSL=false"+
+            "&useLegacyDatetimeCode=false"+
+            "&amp"+
+            "&serverTimezone=UTC";
     public static final String user = "root";
     public static final String password = "root";
 
@@ -24,11 +30,9 @@ public class BDateMySql {
         createConnect();
         Statement statement = connection.createStatement();
         return statement.executeQuery(query);
-
     }
 
     public static int update(String query) throws SQLException {
-
         createConnect();
         Statement statement = connection.createStatement();
         return statement.executeUpdate(query);
